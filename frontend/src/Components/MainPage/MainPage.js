@@ -47,7 +47,31 @@ export default function MainPage() {
         .catch(err=>{
             console.log(err)
         })
-    }, [])
+    }, [socketUserMessage])
+
+    const test = function(){
+        
+        for(let o of allConv){
+            
+              axios.get(`http://localhost:5000/api/conversation/${o._id}`, {
+                  withCredentials:true,
+                  headers:{
+                    Authorization: `Bearer ${Cookie.get("access_token")}`
+                  }
+              })
+              .then(res=>{
+                  console.log(res.data.data.messages)
+                  getAllMessages(res.data.data.messages)
+              })
+              .catch(err=>{
+                  console.log(err)
+              })
+        }
+    }
+    
+    useEffect(()=>{
+        test()
+    },[socketUserMessage])
 
     
 
@@ -68,27 +92,7 @@ export default function MainPage() {
                     </div>
                     <div className='main__clients'>
                         {conversations.map((items)=>{
-                            return(<div onClick={(e)=>{
-                                e.preventDefault()
-                                for(let o of allConv){
-                                    
-                                      axios.get(`http://localhost:5000/api/conversation/${o._id}`, {
-                                          withCredentials:true,
-                                          headers:{
-                                            Authorization: `Bearer ${Cookie.get("access_token")}`
-                                          }
-                                      })
-                                      .then(res=>{
-                                          console.log(res.data.data.messages)
-                                          getAllMessages(res.data.data.messages)
-                                      })
-                                      .catch(err=>{
-                                          console.log(err)
-                                      })
-                                }
-                              
-
-                            }} className='main__clientsContainer'>
+                            return(<div onClick={test} className='main__clientsContainer'>
                                 <div className='main__clientImage'>
                                     <img className='main__clientImg' src={items.image}></img>
                                 </div>

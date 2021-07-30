@@ -84,6 +84,7 @@ exports.getUserInformation = (req, res, next)=>{
     })
     .then(user=>{
         if(user){
+            io.getIO().emit("userMessage", {action:"create", data:user})
             res.status(200).json({
                 data:user
             })
@@ -120,7 +121,7 @@ exports.postStartAnewConveration = (req, res, next)=>{
                                 conv.messages.push(mess._id)
                                 conv.save()
                                 io.getIO().emit("newMessage", { action:"create", data:mess})
-                                io.getIO().emit("userMessage", {action:"create", data:mess})
+                               
                                 res.status(201).json({
                                     data:"message create without new"
                                 })
