@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 const ConversationModel = require("../models/conversation");
 const MessageModel = require("../models/messages")
 const decode = require("jwt-decode")
+const io = require("../APIs/socket")
 
 exports.postRegisterUser = (req, res, next)=>{
     bcrypt.genSalt(10, function(err, salt){
@@ -118,6 +119,8 @@ exports.postStartAnewConveration = (req, res, next)=>{
                             if(conv){
                                 conv.messages.push(mess._id)
                                 conv.save()
+                                io.getIO().emit("newMessage", { action:"create", data:mess})
+                                io.getIO().emit("userMessage", {action:"create", data:mess})
                                 res.status(201).json({
                                     data:"message create without new"
                                 })
@@ -172,6 +175,39 @@ exports.postStartAnewConveration = (req, res, next)=>{
 
 
 exports.getOneConversation = (req, res, next)=>{
+    const decoded = decode(req.session.jwt)
+    UserModel.findOne({email:decoded.email})
+    .then(user=>{
+        if(user){
+            const id = req.params.id;
+            ConversationModel.findOne({_id:id})
+            .populate("messages")
+            .then(conv=>{
+                if(conv){
+                    res.status(200).json({
+                        data:conv
+                    })
+                }else{
+                    res.status(404).json({
+                        noFound:"no found"
+                    })
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        }else{
+            res.status(404).json({
+                noUser:"No user found"
+            })
+        }
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+}
+
+exports.getMessagesInRealTime = (req, res, next)=>{
     const decoded = decode(req.session.jwt)
     UserModel.findOne({email:decoded.email})
     .then(user=>{

@@ -47,6 +47,6 @@ const server = app.listen(PORT, function(err){
 //Socket io
 const io = require("./APIs/socket").init(server);
 io.on('connection', socket=>{
-    console.log('Client Connected!');
+    console.log("client connected")
 });
 

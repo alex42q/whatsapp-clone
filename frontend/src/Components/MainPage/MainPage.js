@@ -2,12 +2,31 @@ import React, {useEffect, useState} from 'react'
 import "./MainPage.css"
 import axios from "axios"
 import Cookie from "js-cookie"
+import openSocket from "socket.io-client"
 
 export default function MainPage() {
     const [user, getUser] = useState([])
     const [conversations, getConversations] = useState([])
     const [allConv, getAllConv] = useState([])
     const [messages, getAllMessages] = useState([])
+    const [socketClientMessage, getSocketClientMessage] = useState([])
+    const [socketUserMessage, socketGetUserMessage]= useState([])
+
+    useEffect(()=>{
+        const socket = openSocket("http://localhost:5000")
+        socket.on("newMessage", data=>{
+            console.log(data.data)
+            getSocketClientMessage(data.data.message)
+        })
+    }, [])
+
+    useEffect(()=>{
+        const socket = openSocket("http://localhost:5000")
+        socket.on("userMessage", data=>{
+            console.log(data.data)
+            socketGetUserMessage(data.data.message)
+        })
+    }, [])
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/api/user`, {
@@ -30,6 +49,8 @@ export default function MainPage() {
         })
     }, [])
 
+    
+
     return (
         <div className='main'>
             <div className='main__container'>
@@ -50,7 +71,7 @@ export default function MainPage() {
                             return(<div onClick={(e)=>{
                                 e.preventDefault()
                                 for(let o of allConv){
-
+                                    
                                       axios.get(`http://localhost:5000/api/conversation/${o._id}`, {
                                           withCredentials:true,
                                           headers:{
