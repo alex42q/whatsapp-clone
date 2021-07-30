@@ -1,0 +1,77 @@
+.main__container{
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-around;
+}
+
+.main__leftSide{
+    width: 15vw;
+    height: 100vh;
+}
+
+.main__rightSide{
+    width: 85vw;
+    height: 100vh;
+    background-color: rgba(65, 48, 24, 0.309);
+}
+
+.main__imageSide{
+    padding: 1rem 1rem;
+}
+
+.main__imgSide{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+.main__leftSideContainer{
+    display: flex;
+    align-items: center;
+}
+
+.main__searchInput{
+    width: 97%;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.main__messagesContainer{
+    display: grid;
+    grid-template-columns: auto;
+}
+
+.main__messagesLeftSide{
+    padding: 1rem 2rem;
+ 
+    background-color: white;
+}
+
+.main__messagesRightSide{
+    padding: 1rem 2rem;
+    text-align: right;
+    background-color: green;
+
+}
+
+.main__clientsContainer{
+    display: flex;
+    text-align: center;
+    align-self: center;
+}
+
+.main__clientFirstLastName{
+    text-align: center;
+}
+
+.main__clientSpan{
+    text-align: center;
+}
+
+.main__clientImg{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 100%;
+}
